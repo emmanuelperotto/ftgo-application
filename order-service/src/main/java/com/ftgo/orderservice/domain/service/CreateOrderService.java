@@ -20,7 +20,8 @@ public class CreateOrderService {
     }
 
     public Mono<CreateOrderReply> create(CreateOrderRequest orderRequest) {
-        return Mono.just(orderRequest).map(buildOrderObject)
+        return Mono.just(orderRequest)
+                .map(buildOrderObject)
                 .flatMap(persistOrder)
 //                .flatMap(createOrderSaga) //TODO: WIP
                 .map(buildOrderReplyObject);
