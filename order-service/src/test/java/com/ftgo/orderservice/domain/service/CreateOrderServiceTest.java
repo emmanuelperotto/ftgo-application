@@ -33,7 +33,6 @@ class CreateOrderServiceTest {
 
     @Test
     void create_WhenItFails_ThenReturnsError() {
-        var order = Order.builder().build();
         Mockito.when(orderRepositoryMock.save(Mockito.any())).thenThrow(IllegalArgumentException.class);
 
         var createRequest = new CreateOrderRequest(1L, 2L);
