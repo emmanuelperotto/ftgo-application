@@ -39,6 +39,5 @@ class CreateOrderServiceTest {
         StepVerifier.create(createOrderService.create(createRequest))
             .expectSubscription()
             .verifyError();
-        ;
     }
 }
