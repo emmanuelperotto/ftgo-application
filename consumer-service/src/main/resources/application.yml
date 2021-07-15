@@ -6,6 +6,18 @@ spring:
 
 logging:
   level:
-      org:
+    org:
         springframework:
           r2dbc: DEBUG
+    com:
+      amazonaws:
+        util:
+          EC2MetadataUtils: error
+cloud:
+  aws:
+    sqs:
+      region: ${AWS_REGION:us-east-1}
+    region:
+      static: ${AWS_REGION:us-east-1}
+    credentials:
+      profile-name: ftgo
