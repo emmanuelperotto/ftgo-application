@@ -57,14 +57,20 @@
             <scope>test</scope>
         </dependency>
 
-
         <dependency>
-            <groupId>com.amazonaws</groupId>
-            <artifactId>aws-java-sdk-bom</artifactId>
-            <version>1.11.951</version>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>bom</artifactId>
+            <version>2.16.60</version>
             <type>pom</type>
             <scope>import</scope>
         </dependency>
+
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>stepfunctions</artifactId>
+            <version>2.0.0-preview-11</version>
+        </dependency>
+
 
         <dependency>
             <groupId>io.awspring.cloud</groupId>
