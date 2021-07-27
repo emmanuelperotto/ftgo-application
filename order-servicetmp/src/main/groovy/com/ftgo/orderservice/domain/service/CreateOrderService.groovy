@@ -22,11 +22,16 @@ class CreateOrderService {
         Mono.just(orderRequest)
                 .map(buildOrderObject)
                 .flatMap(persistOrder)
+                .flatMap(createOrderSaga)
                 .map(buildOrderReplyObject)
     }
 
     private Closure<Order> buildOrderObject = (CreateOrderRequest orderRequest) -> {
-        return new Order(createdAt: ZonedDateTime.now(), consumerId: orderRequest.consumerId, restaurantId: orderRequest.restaurantId)
+        return new Order(
+                createdAt: ZonedDateTime.now(),
+                consumerId: orderRequest.consumerId,
+                restaurantId: orderRequest.restaurantId
+        )
     }
 
     private Closure<CreateOrderReply> buildOrderReplyObject = (Order order) -> {
@@ -38,5 +43,9 @@ class CreateOrderService {
                 .doOnError(e -> {
                     LOGGER.log(Level.WARNING, "Error saving order to db: ${e.message}", order)
                 })
+    }
+
+    private Closure<Mono<Order>> createOrderSaga = (Order order) -> {
+
     }
 }
