@@ -25,7 +25,11 @@ public class OrdersController {
 
         return createOrderService.create(createOrderRequest)
                 .map(createOrderReply -> ResponseEntity.created(null).body(createOrderReply))
-                .onErrorResume(e -> Mono.just(ResponseEntity.unprocessableEntity().body(null)));
+                .onErrorResume(e -> {
+                    log.error("Error creating order: {}", e.getMessage());
+
+                    return Mono.just(ResponseEntity.unprocessableEntity().body(null));
+                });
     }
 
 }
