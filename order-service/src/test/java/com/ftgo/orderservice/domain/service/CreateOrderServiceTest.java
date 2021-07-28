@@ -11,17 +11,20 @@ import reactor.test.StepVerifier;
 class CreateOrderServiceTest {
     private CreateOrderService createOrderService;
     private OrderRepository orderRepositoryMock;
+    private CreateOrderSaga createOrderSagaMock;
 
     @BeforeEach
     void setUp() {
+        createOrderSagaMock = Mockito.mock(CreateOrderSaga.class);
         orderRepositoryMock = Mockito.mock(OrderRepository.class);
-        createOrderService = new CreateOrderService(orderRepositoryMock);
+        createOrderService = new CreateOrderService(orderRepositoryMock, createOrderSagaMock);
     }
 
     @Test
     void create_WhenItSucceeds_ThenReturnASuccessfulReply() {
         var order = Order.builder().build();
         Mockito.when(orderRepositoryMock.save(Mockito.any())).thenReturn(Mono.just(order));
+        Mockito.when(createOrderSagaMock.create(Mockito.any())).thenReturn(Mono.just(order));
 
         var createRequest = new CreateOrderRequest(1L, 2L);
 

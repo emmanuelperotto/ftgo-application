@@ -5,6 +5,7 @@ import com.ftgo.orderservice.domain.events.OrderState;
 import com.ftgo.orderservice.domain.model.Order;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
 
 import java.time.ZonedDateTime;
@@ -14,16 +15,19 @@ import java.util.function.Function;
 @Slf4j
 public class CreateOrderService {
     private OrderRepository orderRepository;
+    private CreateOrderSaga createOrderSaga;
 
-    public CreateOrderService(OrderRepository orderRepository) {
+    public CreateOrderService(OrderRepository orderRepository, CreateOrderSaga createOrderSaga) {
         this.orderRepository = orderRepository;
+        this.createOrderSaga = createOrderSaga;
     }
 
+    @Transactional
     public Mono<CreateOrderReply> create(CreateOrderRequest orderRequest) {
         return Mono.just(orderRequest)
                 .map(buildOrderObject)
                 .flatMap(persistOrder)
-//                .flatMap(createOrderSaga) //TODO: WIP
+                .flatMap(startSagaExecution)
                 .map(buildOrderReplyObject);
     }
 
@@ -34,8 +38,10 @@ public class CreateOrderService {
             .createdAt(ZonedDateTime.now())
             .build();
 
-    private final Function<Order, Mono<Order>> persistOrder = (order) -> orderRepository.save(order)
+    private final Function<Order, Mono<Order>> persistOrder = (order) -> this.orderRepository.save(order)
             .doOnError(e -> log.warn("Error saving order to db: " + e.getMessage()));
+
+    private final Function<Order, Mono<Order>> startSagaExecution = (order) -> this.createOrderSaga.create(order);
 
     private final Function<Order, CreateOrderReply> buildOrderReplyObject = CreateOrderReply::build;
 }

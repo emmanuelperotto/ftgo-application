@@ -9,5 +9,14 @@ logging:
       org:
         springframework:
           r2dbc: DEBUG
+cloud:
+  aws:
+    sqs:
+      region: ${AWS_REGION:us-east-1}
+    region:
+      static: ${AWS_REGION:us-east-1}
+    credentials:
+      profile-name: ftgo
+
 server:
   port: 8080

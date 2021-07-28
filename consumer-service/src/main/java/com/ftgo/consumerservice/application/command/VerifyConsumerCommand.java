@@ -24,7 +24,7 @@ public class VerifyConsumerCommand {
         var jsonNode = objectMapper.readTree(json);
         var commandData = jsonNode.get("data");
         var cid = commandData.get("cid").asText();
-        var orderId = commandData.get("orderId").asLong();
+        var orderId = commandData.get("id").asLong();
         var consumerId = commandData.get("consumerId").asLong();
         var restaurantId = commandData.get("restaurantId").asLong();
         var taskToken = jsonNode.get("taskToken").asText();
