@@ -1,4 +1,4 @@
-package com.ftgo.kitchenservice.application.command;
+package com.ftgo.accountingservice.command;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class CreateTicketCommand {
+public class AuthorizeCardCommand {
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     private final Long orderId;
@@ -20,7 +20,7 @@ public class CreateTicketCommand {
         return taskToken;
     }
 
-    public static CreateTicketCommand buildFromJSON(String json) throws JsonProcessingException {
+    public static AuthorizeCardCommand buildFromJSON(String json) throws JsonProcessingException {
         var jsonNode = objectMapper.readTree(json);
         var commandData = jsonNode.get("data");
         var cid = commandData.get("cid").asText();
@@ -29,7 +29,7 @@ public class CreateTicketCommand {
         var restaurantId = commandData.get("restaurantId").asLong();
         var taskToken = jsonNode.get("taskToken").asText();
 
-        return CreateTicketCommand.builder()
+        return AuthorizeCardCommand.builder()
                 .orderId(orderId)
                 .consumerId(consumerId)
                 .restaurantId(restaurantId)

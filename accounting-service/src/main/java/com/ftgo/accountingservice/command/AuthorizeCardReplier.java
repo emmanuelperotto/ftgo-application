@@ -1,4 +1,4 @@
-package com.ftgo.kitchenservice.application.command;
+package com.ftgo.accountingservice.command;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,18 +11,18 @@ import software.amazon.awssdk.services.sfn.model.TaskTimedOutException;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class CreateTicketReplier {
+public class AuthorizeCardReplier {
     private final SfnClient sfnClient;
 
-    public void replyWithSuccess(Command command) {
+    public void replyWithSuccess(AuthorizeCardCommand authorizeCardCommand) {
         try {
-            var reply = CreateTicketReply.buildFromCommand(command);
+            var reply = AuthorizeCardReply.buildFromCommand(authorizeCardCommand);
             log.info("Reply built: {}", reply);
             var replyJSON = reply.toJSON();
             log.info("Reply JSON built: {}", replyJSON);
 
             var request = SendTaskSuccessRequest.builder()
-                    .taskToken(command.taskToken())
+                    .taskToken(authorizeCardCommand.taskToken())
                     .output(replyJSON)
                     .build();
             sfnClient.sendTaskSuccess(request);
@@ -33,11 +33,11 @@ public class CreateTicketReplier {
             }
 
             log.error("Error trying to reply VerifyConsumerCommand: {}", e.getMessage());
-            replyWithFailure(command, e);
+            replyWithFailure(authorizeCardCommand, e);
         }
     }
 
-    public void replyWithFailure(Command command, Exception e) {
+    public void replyWithFailure(AuthorizeCardCommand authorizeCardCommand, Exception e) {
         try {
             var cause = e.getCause();
             var message = e.getMessage();
@@ -46,7 +46,7 @@ public class CreateTicketReplier {
             var request = SendTaskFailureRequest.builder()
                     .error(message)
                     .cause(cause != null ? cause.getMessage() : "")
-                    .taskToken(command.taskToken())
+                    .taskToken(authorizeCardCommand.taskToken())
                     .build();
             sfnClient.sendTaskFailure(request);
         } catch (Exception ex) {

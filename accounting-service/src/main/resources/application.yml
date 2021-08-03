@@ -1,0 +1,24 @@
+spring:
+  r2dbc:
+    url: r2dbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:accounting}
+    username: ${MYSQL_USER:user}
+    password: ${MYSQL_PASSWORD:secret123}
+logging:
+  level:
+    org:
+      springframework:
+        r2dbc: DEBUG
+    com:
+      amazonaws:
+        util:
+          EC2MetadataUtils: error
+cloud:
+  aws:
+    sqs:
+      region: ${AWS_REGION:us-east-1}
+    region:
+      static: ${AWS_REGION:us-east-1}
+    credentials:
+      profile-name: ftgo
+server:
+  port: 8083
