@@ -1,4 +1,4 @@
-package com.ftgo.kitchenservice.application.command;
+package com.ftgo.accountingservice.command;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -9,7 +9,7 @@ import lombok.Data;
 @Data
 @Builder
 @JsonIgnoreProperties(value = {"objectMapper"})
-public class CreateTicketReply {
+public class AuthorizeCardReply {
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     private final Long orderId;
@@ -21,8 +21,8 @@ public class CreateTicketReply {
         return objectMapper.writeValueAsString(this);
     }
 
-    public static CreateTicketReply buildFromCommand(Command command) {
-        return CreateTicketReply.builder()
+    public static AuthorizeCardReply buildFromCommand(AuthorizeCardCommand command) {
+        return AuthorizeCardReply.builder()
                 .orderId(command.getOrderId())
                 .consumerId(command.getConsumerId())
                 .restaurantId(command.getRestaurantId())
